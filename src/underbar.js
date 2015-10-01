@@ -159,6 +159,16 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
+    var shouldInitialize = arguments.length < 3;
+    _.each(collection, function(item) {
+      if (shouldInitialize) {
+        accumulator = item;
+        shouldInitialize = false;
+      } else {
+        accumulator = iterator(accumulator, item);
+      }
+    });
+    return accumulator;
   };
 
   // Determine if the array or object contains a given value (using `===`).
