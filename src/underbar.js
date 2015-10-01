@@ -99,6 +99,12 @@
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
+    var seen = {};
+    return _.reject(array, function(item) {
+      var result = item in seen;
+      seen[item] = true;
+      return result;
+    });
   };
 
 
