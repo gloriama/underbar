@@ -285,6 +285,21 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    var computed = {};
+    return function() {
+      var cleanArguments = [],
+          i;
+      for (i = 0; i < arguments.length; i++)
+        cleanArguments.push(arguments[i]);
+        
+      if (cleanArguments in computed) {
+        return computed[cleanArguments];
+      }
+      var result = func.apply(null, cleanArguments);
+      computed[cleanArguments] = result;
+      return result;
+    };
+    
   };
 
   // Delays a function for the given number of milliseconds, and then calls
