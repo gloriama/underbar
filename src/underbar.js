@@ -93,7 +93,7 @@
   _.reject = function(collection, test) {
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
-    var oppositeTest = function(item) { return !test(item); };
+    var oppositeTest = function(value, key, collection) { return !test(value, key, collection); };
     return _.filter(collection, oppositeTest);
   };
 
@@ -114,8 +114,8 @@
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
     var results = [];
-    _.each(collection, function(item, index, collection) {
-      results.push(iterator(item, index, collection));
+    _.each(collection, function(value, key, collection) {
+      results.push(iterator(value, key, collection));
     });
     return results;
   };
