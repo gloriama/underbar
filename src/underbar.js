@@ -287,10 +287,10 @@
   _.memoize = function(func) {
     var computed = {};
     return function() {
-      var cleanArguments = [],
-          i;
-      for (i = 0; i < arguments.length; i++)
-        cleanArguments.push(arguments[i]);
+      var cleanArguments = [];
+      _.each(arguments, function(value) {
+        cleanArguments.push(value);
+      });
         
       if (cleanArguments in computed) {
         return computed[cleanArguments];
@@ -311,11 +311,12 @@
   _.delay = function(func, wait) {
     var parentArguments = arguments;
     setTimeout(function() {
-      var cleanArguments = [],
-          i;
-      for (i = 2; i < parentArguments.length; i++) {
-        cleanArguments.push(parentArguments[i]);
-      }
+      var cleanArguments = [];
+      _.each(parentArguments, function(value, index) {
+        if (index > 1) {
+          cleanArguments.push(value);
+        }
+      });
 
       func.apply(null, cleanArguments);
     }, wait);
