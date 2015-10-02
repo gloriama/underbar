@@ -81,9 +81,9 @@
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, test) {
     var results = [];
-    _.each(collection, function(item) {
-      if (test(item)) {
-        results.push(item);
+    _.each(collection, function(value, key, collection) {
+      if (test(value, key, collection)) {
+        results.push(value);
       }
     });
     return results;
@@ -287,10 +287,7 @@
   _.memoize = function(func) {
     var computed = {};
     return function() {
-      var cleanArguments = [],
-          i;
-      for (i = 0; i < arguments.length; i++)
-        cleanArguments.push(arguments[i]);
+      var cleanArguments = _.map(arguments, _.identity);
         
       if (cleanArguments in computed) {
         return computed[cleanArguments];
@@ -311,11 +308,9 @@
   _.delay = function(func, wait) {
     var parentArguments = arguments;
     setTimeout(function() {
-      var cleanArguments = [],
-          i;
-      for (i = 2; i < parentArguments.length; i++) {
-        cleanArguments.push(parentArguments[i]);
-      }
+      var cleanArguments = _.filter(parentArguments, function(_, index) {
+        return index > 1;
+      });
 
       func.apply(null, cleanArguments);
     }, wait);
