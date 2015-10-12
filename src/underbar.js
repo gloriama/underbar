@@ -424,5 +424,24 @@
   //
   // Note: This is difficult! It may take a while to implement.
   _.throttle = function(func, wait) {
+    var inUse = false;
+    var callAgain = false;
+    var fn = function() {
+      if (inUse) {
+        callAgain = true;
+      } else
+      {
+        inUse = true;
+        func();
+        setTimeout(function() {
+          inUse = false;
+          if (callAgain) {
+            callAgain = false;
+            fn();
+          }
+        }, wait);
+      }
+    };
+    return fn;
   };
 }());
