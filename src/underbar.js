@@ -370,6 +370,12 @@
   // Example:
   // _.zip(['a','b','c','d'], [1,2,3]) returns [['a',1], ['b',2], ['c',3], ['d',undefined]]
   _.zip = function() {
+    var parentArguments = arguments;
+    return _.map(arguments[0], function(_item, i) {
+      return _.map(parentArguments, function(arg) {
+        return arg[i];
+      });
+    });
   };
 
   // Takes a multidimensional array and converts it to a one-dimensional array.
