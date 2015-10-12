@@ -370,8 +370,11 @@
   // Example:
   // _.zip(['a','b','c','d'], [1,2,3]) returns [['a',1], ['b',2], ['c',3], ['d',undefined]]
   _.zip = function() {
+    var longestArg = _.reduce(arguments, function(accumulator, item) {
+      return item.length > accumulator.length ? item : accumulator;
+    });
     var parentArguments = arguments;
-    return _.map(arguments[0], function(_item, i) {
+    return _.map(longestArg, function(_item, i) {
       return _.map(parentArguments, function(arg) {
         return arg[i];
       });
