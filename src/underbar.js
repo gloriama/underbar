@@ -410,6 +410,12 @@
   // Take the difference between one array and a number of other arrays.
   // Only the elements present in just the first array will remain.
   _.difference = function(array) {
+    var parentArguments = arguments;
+    return _.filter(array, function(item) {
+      return _.every(parentArguments, function(arg) {
+        return arg === array || !_.contains(arg, item);
+      });
+    });
   };
 
   // Returns a function, that, when invoked, will only be triggered at most once
