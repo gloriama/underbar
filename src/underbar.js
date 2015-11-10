@@ -424,32 +424,13 @@
   //
   // Note: This is difficult! It may take a while to implement.
   _.throttle = function(func, wait) {
-    var inUse = false;
-    var callAgain = false;
-    var callAgainArgs = [];
+    var canCall = true;
     
     var fn = function() {
-      if (inUse && !callAgain) {
-        callAgain = true;
-        callAgainArgs = [];
-        var i;
-        for (i = 0; i < arguments.length; i++)
-          callAgainArgs.push(arguments[i]);
-        //console.log("TAKING PENDING CALL", callAgainArgs);
-      } else if (!inUse) {
-        inUse = true;
+      if (canCall) {
+        canCall = false;
         func.apply(this, arguments);
-        //console.log("RAN FUNCTION!");
-        setTimeout(reset, wait);
-      }
-    };
-    
-    var reset = function() {
-      inUse = false;
-      if (callAgain) {
-        callAgain = false;
-        //console.log("RUNNING PENDING CALL");
-        func.apply(this, callAgainArgs);
+        setTimeout(function() {canCall = true;}, wait);
       }
     };
     
