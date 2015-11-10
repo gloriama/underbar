@@ -426,22 +426,33 @@
   _.throttle = function(func, wait) {
     var inUse = false;
     var callAgain = false;
+    var callAgainArgs = [];
+    
     var fn = function() {
-      if (inUse) {
+      if (inUse && !callAgain) {
         callAgain = true;
-      } else
-      {
+        callAgainArgs = [];
+        var i;
+        for (i = 0; i < arguments.length; i++)
+          callAgainArgs.push(arguments[i]);
+        //console.log("TAKING PENDING CALL", callAgainArgs);
+      } else if (!inUse) {
         inUse = true;
-        func();
-        setTimeout(function() {
-          inUse = false;
-          if (callAgain) {
-            callAgain = false;
-            fn();
-          }
-        }, wait);
+        func.apply(this, arguments);
+        //console.log("RAN FUNCTION!");
+        setTimeout(reset, wait);
       }
     };
+    
+    var reset = function() {
+      inUse = false;
+      if (callAgain) {
+        callAgain = false;
+        //console.log("RUNNING PENDING CALL");
+        func.apply(this, callAgainArgs);
+      }
+    };
+    
     return fn;
   };
 }());
