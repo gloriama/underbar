@@ -362,6 +362,25 @@
   // of that string. For example, _.sortBy(people, 'name') should sort
   // an array of people by their name.
   _.sortBy = function(collection, iterator) {
+    var byCriterion = _.map(collection, function(item) {
+      var criterion = typeof iterator === 'string' ?
+                     item[iterator] : iterator(item);
+      return { criterion: criterion,
+               item: item };
+    });
+    
+    byCriterion.sort(function(a, b) {
+      if (b.criterion === undefined) {
+        return -1;
+      } else if (a.criterion === undefined) {
+        return 1;
+      } else {
+        return a.criterion - b.criterion;
+      }
+    });
+    
+    return _.pluck(byCriterion, 'item');
+    
   };
 
   // Zip together two or more arrays with elements of the same index
